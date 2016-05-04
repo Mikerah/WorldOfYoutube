@@ -1,13 +1,20 @@
 package com.mikerah.android.worldofyoutube;
 
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.content.Context;
+import android.content.Intent;
+import android.support.v4.app.Fragment;
 
-public class WorldOfYoutubeActivity extends AppCompatActivity {
+public class WorldOfYoutubeActivity extends SingleFragmentActivity {
+
+    public static Intent newIntent(Context context) {
+        return new Intent(context, WorldOfYoutubeActivity.class);
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_world_of_youtube);
+    protected Fragment createFragment() {
+        return WorldOfYoutubeFragment.newInstance();
     }
+
+
+
 }
