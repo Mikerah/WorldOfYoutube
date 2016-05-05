@@ -25,4 +25,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.3.0'
     compile files('libs/YouTubeAndroidPlayerApi.jar')
     compile 'com.android.support:recyclerview-v7:23.3.0'
+    compile 'com.google.apis:google-api-services-youtube:v3-rev171-1.21.0'
 }
