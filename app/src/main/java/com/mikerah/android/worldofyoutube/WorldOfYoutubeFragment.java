@@ -1,25 +1,17 @@
 package com.mikerah.android.worldofyoutube;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.HttpRequestInitializer;
-import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.model.Video;
-import com.google.api.services.youtube.model.VideoListResponse;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -30,11 +22,9 @@ import java.util.List;
  */
 public class WorldOfYoutubeFragment extends Fragment {
 
-    private static final String TAG = "WorldOfYoutubeFragment";
+
 
     private static YouTube mYoutube;
-    private static final Long NUMBER_OF_VIDEOS_RETURNED = 25L;
-    private static final String API_KEY = " AIzaSyCA7P4r5I2HffPVR4-A-iHY3a738WQHUDY";
 
     private RecyclerView mVideoRecyclerView;
     private List<com.google.api.services.youtube.model.Video> mPopularVideos = new ArrayList<>();
@@ -47,7 +37,7 @@ public class WorldOfYoutubeFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        createYoutubeObj();
+        mYoutube = YoutubeHelper.createYoutubeObj();
         new GetVideosTask().execute();
     }
 
@@ -66,18 +56,6 @@ public class WorldOfYoutubeFragment extends Fragment {
     private void setupAdapter() {
         if(isAdded()) {
             mVideoRecyclerView.setAdapter(new VideoAdapter(mPopularVideos));
-        }
-    }
-
-    private void createYoutubeObj() {
-        try {
-            mYoutube = new YouTube.Builder(new NetHttpTransport(), new JacksonFactory(), new HttpRequestInitializer() {
-                @Override
-                public void initialize(HttpRequest request) throws IOException {
-                }
-            }).setApplicationName("World of Youtube").build();
-        } catch (Exception e) {
-            System.err.println("Couldn't create youtube object.");
         }
     }
 
@@ -100,9 +78,7 @@ public class WorldOfYoutubeFragment extends Fragment {
             mTitleTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Uri link = Uri.parse("http://www.youtube.com/watch?v=" + mVideo.getId());
-                    Intent i = new Intent(Intent.ACTION_VIEW, link);
-                    startActivity(i);
+                    startActivity(YoutubeHelper.watchVideoIntent(mVideo));
                 }
             });
         }
@@ -142,7 +118,7 @@ public class WorldOfYoutubeFragment extends Fragment {
         protected List<Video> doInBackground(Void... params) {
             List<Video> videos = null;
             try {
-                videos = getVideos();
+                videos = YoutubeHelper.getPopularVideosList(mYoutube);
             } catch (IOException io) {
                 System.err.println("Couldn't get videos");
             }
@@ -155,20 +131,6 @@ public class WorldOfYoutubeFragment extends Fragment {
             setupAdapter();
         }
     }
-
-    private List<Video> getVideos() throws IOException {
-        YouTube.Videos.List videoList = mYoutube.videos().list("snippet");
-        videoList.setChart("mostPopular");
-        videoList.setMaxResults(NUMBER_OF_VIDEOS_RETURNED);
-        videoList.setKey(API_KEY);
-
-        VideoListResponse videoListResponse = videoList.execute();
-        Log.i(TAG, "execute method: " +videoList.execute());
-
-        List<Video> videos = videoListResponse.getItems();
-        return videos;
-    }
-
 
 
 }
