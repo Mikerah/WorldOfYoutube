@@ -44,7 +44,7 @@ public class WorldOfYoutubeFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
         mYoutube = YoutubeHelper.createYoutubeObj();
-        new GetVideosTask().execute();
+        new GetVideosTask(mYoutube).execute();
 
         Handler responseHandler = new Handler();
         mThumbnailDownloader = new ThumbnailDownloader<>(responseHandler);
@@ -75,6 +75,7 @@ public class WorldOfYoutubeFragment extends Fragment {
 
         return v;
     }
+
 
     @Override
     public void onDestroyView() {
@@ -164,12 +165,17 @@ public class WorldOfYoutubeFragment extends Fragment {
     }
 
     private class GetVideosTask extends AsyncTask<Void, Void, List<Video>> {
+        private YouTube mYouTube;
+
+        public GetVideosTask(YouTube youTube) {
+            mYouTube = youTube;
+        }
 
         @Override
         protected List<Video> doInBackground(Void... params) {
             List<Video> videos = null;
             try {
-                videos = YoutubeHelper.getPopularVideosList(mYoutube);
+                videos = YoutubeHelper.getPopularVideosList(mYouTube);
             } catch (IOException io) {
                 System.err.println("Couldn't get videos");
             }

@@ -57,7 +57,7 @@ public class YoutubeHelper {
     public static String getVideoThumbnailUrl(Video video) {
         VideoSnippet videoSnippet = video.getSnippet();
         ThumbnailDetails thumbnailDetails = videoSnippet.getThumbnails();
-        Thumbnail thumbnail = thumbnailDetails.getStandard();
+        Thumbnail thumbnail = thumbnailDetails.getDefault();
         String thumbnailUrl = thumbnail.getUrl();
 
         return thumbnailUrl;
