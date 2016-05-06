@@ -1,7 +1,9 @@
 <resources>
     <string name="app_name">WorldOfYoutube</string>
-    <string name="video_title">Title: %1$s</string>
-    <string name="channel_name">Channel: %1$s</string>
-    <string name="duration_of_video">Length: %1$s</string>
-    <string name="upload_date">Upload Date: %1$s</string>
+    <string name="video_info">
+        Title: %1$s\n
+        Channel: %2$s\n
+        Length: %3$s\n
+        Upload Date: %4$s
+    </string>
 </resources>

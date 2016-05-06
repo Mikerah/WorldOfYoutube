@@ -8,8 +8,11 @@ import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.youtube.YouTube;
+import com.google.api.services.youtube.model.Thumbnail;
+import com.google.api.services.youtube.model.ThumbnailDetails;
 import com.google.api.services.youtube.model.Video;
 import com.google.api.services.youtube.model.VideoListResponse;
+import com.google.api.services.youtube.model.VideoSnippet;
 
 import java.io.IOException;
 import java.util.List;
@@ -40,7 +43,7 @@ public class YoutubeHelper {
     }
 
     public static List<Video> getPopularVideosList(YouTube youTube) throws IOException {
-        YouTube.Videos.List videoList = youTube.videos().list("snippet");
+        YouTube.Videos.List videoList = youTube.videos().list("snippet,contentDetails");
         videoList.setChart("mostPopular");
         videoList.setMaxResults(Constants.NUMBER_OF_VIDEOS_RETURNED);
         videoList.setKey(Constants.API_KEY);
@@ -49,5 +52,14 @@ public class YoutubeHelper {
 
         List<Video> videos = videoListResponse.getItems();
         return videos;
+    }
+
+    public static String getVideoThumbnailUrl(Video video) {
+        VideoSnippet videoSnippet = video.getSnippet();
+        ThumbnailDetails thumbnailDetails = videoSnippet.getThumbnails();
+        Thumbnail thumbnail = thumbnailDetails.getStandard();
+        String thumbnailUrl = thumbnail.getUrl();
+
+        return thumbnailUrl;
     }
 }
