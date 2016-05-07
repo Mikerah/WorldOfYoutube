@@ -100,6 +100,7 @@ public class WorldOfYoutubeFragment extends Fragment {
         private Video mVideo;
 
         private ImageView mVideoThumbnail;
+        private TextView mVideoTitleTextView;
         private TextView mVideoInfoTextView;
 
 
@@ -108,6 +109,7 @@ public class WorldOfYoutubeFragment extends Fragment {
             videoView.setOnClickListener(this);
 
             mVideoThumbnail = (ImageView) videoView.findViewById(R.id.list_video_thumbnail_image_view);
+            mVideoTitleTextView = (TextView)videoView.findViewById(R.id.video_title_text_view);
             mVideoInfoTextView = (TextView)videoView.findViewById(R.id.video_info_text_view);
         }
 
@@ -117,11 +119,14 @@ public class WorldOfYoutubeFragment extends Fragment {
             mVideo = video;
 
             VideoSnippet videoSnippet = mVideo.getSnippet();
+
             String title = videoSnippet.getTitle();
             String channel = videoSnippet.getChannelTitle();
-            String duration = mVideo.getContentDetails().getDuration();
-            String uploadDate = videoSnippet.getPublishedAt().toString();
-            mVideoInfoTextView.setText(getString(R.string.video_info,title,channel,duration,uploadDate));
+            mVideoTitleTextView.setText(getString(R.string.video_title, title));
+
+            String duration = YoutubeHelper.getVideoDuration(mVideo);
+            String uploadDate = YoutubeHelper.getVideoUploadDate(mVideo);
+            mVideoInfoTextView.setText(getString(R.string.video_info,channel,duration,uploadDate));
 
         }
 

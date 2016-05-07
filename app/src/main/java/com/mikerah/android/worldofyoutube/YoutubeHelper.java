@@ -16,6 +16,9 @@ import com.google.api.services.youtube.model.VideoSnippet;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 
 /**
  * Created by Mikerah on 2016-05-05.
@@ -62,4 +65,41 @@ public class YoutubeHelper {
 
         return thumbnailUrl;
     }
+
+    public static String getVideoUploadDate(Video video) {
+        String ud = video.getSnippet().getPublishedAt().toString();
+        String uploadDate = ud.substring(0,ud.indexOf('T'));
+        return uploadDate;
+    }
+
+
+    public static String getVideoDuration(Video video) {
+        String duration_in_ISO = video.getContentDetails().getDuration().substring(2);
+        //DateFormat dateFormat = new SimpleDateFormat("'P''T'm'M's'S'");
+
+        String pattern = "(\\d+)M(\\d+)S";
+
+        Pattern r = Pattern.compile(pattern);
+        Matcher m = r.matcher(duration_in_ISO);
+
+
+        String duration = null;
+        if (m.find()) {
+            if (m.group(2).length() > 1) {
+                duration = m.group(1) + ":" + m.group(2);
+            } else {
+                duration = m.group(1) + ":0" + m.group(2);
+            }
+        } else {
+
+            Pattern patternSec = Pattern.compile("(\\d+)S");
+            Matcher matcherSec = patternSec.matcher(duration_in_ISO);
+            matcherSec.find();
+            duration = "0:"+matcherSec.group(1);
+
+        }
+        return duration;
+
+    }
+
 }
