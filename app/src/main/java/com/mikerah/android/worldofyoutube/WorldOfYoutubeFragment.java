@@ -35,6 +35,11 @@ public class WorldOfYoutubeFragment extends Fragment {
 
     private ThumbnailDownloader<VideoHolder> mThumbnailDownloader;
 
+    private String mRegion;
+    private String mCategory;
+    private Long mVideosToReturn;
+
+
     public static WorldOfYoutubeFragment newInstance() {
         return new WorldOfYoutubeFragment();
     }
@@ -180,7 +185,7 @@ public class WorldOfYoutubeFragment extends Fragment {
         protected List<Video> doInBackground(Void... params) {
             List<Video> videos = null;
             try {
-                videos = YoutubeHelper.getPopularVideosList(mYouTube);
+                videos = YoutubeHelper.getPopularVideosList(mYouTube,mRegion,mCategory,mVideosToReturn);
             } catch (IOException io) {
                 System.err.println("Couldn't get videos");
             }

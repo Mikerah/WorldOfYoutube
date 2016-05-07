@@ -45,10 +45,12 @@ public class YoutubeHelper {
         return i;
     }
 
-    public static List<Video> getPopularVideosList(YouTube youTube) throws IOException {
+    public static List<Video> getPopularVideosList(YouTube youTube, String regionCode,String category, Long numVideos) throws IOException {
         YouTube.Videos.List videoList = youTube.videos().list("snippet,contentDetails");
         videoList.setChart("mostPopular");
-        videoList.setMaxResults(Constants.NUMBER_OF_VIDEOS_RETURNED);
+        videoList.setMaxResults(numVideos);
+        videoList.setRegionCode(regionCode);
+        videoList.setVideoCategoryId(category);
         videoList.setKey(Constants.API_KEY);
 
         VideoListResponse videoListResponse = videoList.execute();
