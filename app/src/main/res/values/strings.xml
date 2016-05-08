@@ -10,4 +10,7 @@
     <string-array name="categories_array"></string-array>
     <string name="welcome">Welcome!</string>
     <string name="next_button">Next</string>
+    <string name="choose_category">Choose a Category</string>
+    <string name="choose_country">Choose a Country</string>
+    <string name="number_of_videos">Select how many videos you want to see (1-50)</string>
 </resources>
