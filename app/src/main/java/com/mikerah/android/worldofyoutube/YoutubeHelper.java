@@ -11,11 +11,13 @@ import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.model.Thumbnail;
 import com.google.api.services.youtube.model.ThumbnailDetails;
 import com.google.api.services.youtube.model.Video;
+import com.google.api.services.youtube.model.VideoCategory;
 import com.google.api.services.youtube.model.VideoListResponse;
 import com.google.api.services.youtube.model.VideoSnippet;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -46,17 +48,42 @@ public class YoutubeHelper {
     }
 
     public static List<Video> getPopularVideosList(YouTube youTube, String regionCode,String category, Long numVideos) throws IOException {
+        Map<CharSequence,CharSequence> categories = MiscUtils.createCategoriesMap(youTube.videoCategories().list("snippet"));
         YouTube.Videos.List videoList = youTube.videos().list("snippet,contentDetails");
         videoList.setChart("mostPopular");
         videoList.setMaxResults(numVideos);
         videoList.setRegionCode(regionCode);
-        videoList.setVideoCategoryId(category);
+        videoList.setVideoCategoryId((String) categories.get(category));
         videoList.setKey(Constants.API_KEY);
 
         VideoListResponse videoListResponse = videoList.execute();
 
         List<Video> videos = videoListResponse.getItems();
         return videos;
+    }
+
+    public static List<CharSequence> getPossibleCategories(String country) {
+        YouTube.VideoCategories.List list = null;
+        try {
+            list = createYoutubeObj().videoCategories().list("snippet");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        list.setRegionCode((String) Constants.COUNTRIES.get(country));
+        List<VideoCategory> videoCatList = null;
+        try {
+            videoCatList = list.execute().getItems();
+        } catch (IOException e) {
+            System.out.println("Didnt'get categories");
+            e.printStackTrace();
+        }
+
+        List<CharSequence> videoCategories = null;
+        for(VideoCategory vd: videoCatList) {
+            videoCategories.add(vd.getSnippet().getTitle());
+        }
+
+        return videoCategories;
     }
 
     public static String getVideoThumbnailUrl(Video video) {
@@ -77,8 +104,6 @@ public class YoutubeHelper {
 
     public static String getVideoDuration(Video video) {
         String duration_in_ISO = video.getContentDetails().getDuration().substring(2);
-        //DateFormat dateFormat = new SimpleDateFormat("'P''T'm'M's'S'");
-
         String pattern = "(\\d+)M(\\d+)S";
 
         Pattern r = Pattern.compile(pattern);

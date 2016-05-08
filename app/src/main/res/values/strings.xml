@@ -6,4 +6,8 @@
     <string name="video_info">
         Channel: %1$s\nLength: %2$s\nUpload Date: %3$s
     </string>
+    <string-array name="countries_array"></string-array>
+    <string-array name="categories_array"></string-array>
+    <string name="welcome">Welcome!</string>
+    <string name="next_button">Next</string>
 </resources>

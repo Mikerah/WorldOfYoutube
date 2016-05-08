@@ -6,13 +6,20 @@ import android.support.v4.app.Fragment;
 
 public class WorldOfYoutubeActivity extends SingleFragmentActivity {
 
-    public static Intent newIntent(Context context) {
-        return new Intent(context, WorldOfYoutubeActivity.class);
+    public static Intent newIntent(Context context, Long numberOfVideos, String region, String category) {
+        Intent i = new Intent(context, WorldOfYoutubeActivity.class);
+        i.putExtra("Number of videos", numberOfVideos);
+        i.putExtra("Region", region);
+        i.putExtra("Category", category);
+        return i;
     }
 
     @Override
     protected Fragment createFragment() {
-        return WorldOfYoutubeFragment.newInstance();
+        Long numberOfVideos = Long.valueOf(getIntent().getStringExtra("Number of videos"));
+        String region = getIntent().getStringExtra("Region");
+        String category = getIntent().getStringExtra("Category");
+        return WorldOfYoutubeFragment.newInstance(numberOfVideos,region,category);
     }
 
 

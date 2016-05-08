@@ -40,15 +40,28 @@ public class WorldOfYoutubeFragment extends Fragment {
     private Long mVideosToReturn;
 
 
-    public static WorldOfYoutubeFragment newInstance() {
-        return new WorldOfYoutubeFragment();
+    public static WorldOfYoutubeFragment newInstance(Long numberOfVideos, String region, String category) {
+        Bundle args = new Bundle();
+        args.putLong(Constants.NUMBER_OF_VIDEOS_CODE,numberOfVideos);
+        args.putString(Constants.COUNTRY_CODE,region);
+        args.putString(Constants.CATEGORY_CODE,category);
+
+        WorldOfYoutubeFragment fragment = new WorldOfYoutubeFragment();
+        fragment.setArguments(args);
+        return fragment;
     }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
         mYoutube = YoutubeHelper.createYoutubeObj();
+
+        mRegion = (String) Constants.COUNTRIES.get(getArguments().getString(Constants.COUNTRY_CODE));
+        mCategory = getArguments().getString(Constants.CATEGORY_CODE);
+        mVideosToReturn = getArguments().getLong(Constants.NUMBER_OF_VIDEOS_CODE);
+
         new GetVideosTask(mYoutube).execute();
 
         Handler responseHandler = new Handler();
@@ -56,10 +69,10 @@ public class WorldOfYoutubeFragment extends Fragment {
         mThumbnailDownloader.setThumbnailDownloadListener(
                 new ThumbnailDownloader.ThumbnailDownloadListener<VideoHolder>() {
                     @Override
-                    public void onThumbnailDownloaded(VideoHolder photoHolder, Bitmap bitmap) {
+                    public void onThumbnailDownloaded(VideoHolder videoHolder, Bitmap bitmap) {
                         if (!isAdded()) return;
                         Drawable drawable = new BitmapDrawable(getResources(), bitmap);
-                        photoHolder.bindDrawable(drawable);
+                        videoHolder.bindDrawable(drawable);
                     }
                 }
         );
