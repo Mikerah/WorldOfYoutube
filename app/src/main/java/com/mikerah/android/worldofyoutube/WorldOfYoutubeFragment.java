@@ -62,6 +62,7 @@ public class WorldOfYoutubeFragment extends Fragment {
         mCategory = getArguments().getString(Constants.CATEGORY_CODE);
         mVideosToReturn = getArguments().getLong(Constants.NUMBER_OF_VIDEOS_CODE);
 
+        getActivity().setTitle(mCategory);
         new GetVideosTask(mYoutube).execute();
 
         Handler responseHandler = new Handler();
