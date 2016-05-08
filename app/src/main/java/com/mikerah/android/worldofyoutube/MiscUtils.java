@@ -4,12 +4,14 @@ import android.widget.ArrayAdapter;
 
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.model.VideoCategory;
+import com.google.api.services.youtube.model.VideoCategoryListResponse;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,35 +60,27 @@ public class MiscUtils {
         arrayAdapter.notifyDataSetChanged();
     }
 
-    /*
-    public static void addItemsToSpinner(ArrayAdapter<CharSequence> arrayAdapter, YouTube.VideoCategories.List categoriesList){
-        List<VideoCategory> categories = null;
-        try {
-            categories = categoriesList.execute().getItems();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public static Map<CharSequence,CharSequence> createCategoriesMap(YouTube.VideoCategories.List categoriesList, String apiKey, String regionCode) {
+        List<VideoCategory> categories = new ArrayList<>();
+        VideoCategoryListResponse videoCategoryListResponse = null;
 
-        for(VideoCategory vd: categories) {
-            arrayAdapter.add(vd.getSnippet().getTitle());
-        }
-        arrayAdapter.notifyDataSetChanged();
-    }
-    */
+        categoriesList.setKey(apiKey);
+        categoriesList.setRegionCode(regionCode);
 
-    public static Map<CharSequence,CharSequence> createCategoriesMap(YouTube.VideoCategories.List categoriesList) {
-        List<VideoCategory> categories = null;
         try {
-            categories = categoriesList.execute().getItems();
+            videoCategoryListResponse = categoriesList.execute();
         } catch (IOException e) {
+            System.err.println("Didn't get video categories");
             e.printStackTrace();
         }
 
         Map<CharSequence,CharSequence> categoriesMap = new HashMap<>();
 
+        categories = videoCategoryListResponse.getItems();
         for(VideoCategory vd: categories) {
             categoriesMap.put(vd.getSnippet().getTitle(),vd.getId());
         }
+        categoriesMap.put("All","0");
 
         return categoriesMap;
     }

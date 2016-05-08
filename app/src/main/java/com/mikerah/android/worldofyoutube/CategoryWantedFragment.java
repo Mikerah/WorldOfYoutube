@@ -1,5 +1,6 @@
 package com.mikerah.android.worldofyoutube;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -39,11 +40,10 @@ public class CategoryWantedFragment extends Fragment {
 
         mCategorySpinner = new Spinner(getActivity().getBaseContext());
 
-        ArrayAdapter<CharSequence> categoriesAdapter = new ArrayAdapter<CharSequence>(
+        mCategoryAdapter = new ArrayAdapter<CharSequence>(
                 getActivity().getBaseContext(),
                 android.R.layout.simple_spinner_dropdown_item);
 
-        mCategorySpinner.setAdapter(categoriesAdapter);
         new GetCategoriesTask(mCountry).execute();
     }
 
@@ -51,21 +51,17 @@ public class CategoryWantedFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_category_wanted, container, false);
 
-        Spinner categoriesSpinner = (Spinner) view.findViewById(R.id.categories_spinner);
-        ArrayAdapter<CharSequence> categoriesAdapter = new ArrayAdapter<CharSequence>(
-                getActivity().getBaseContext(),
-                android.R.layout.simple_spinner_dropdown_item,
-                mPossibleCategories
-        );
-
+        mCategorySpinner = (Spinner) view.findViewById(R.id.categories_spinner);
         mCategorySpinner.setAdapter(mCategoryAdapter);
-
 
         Button nextButton = (Button) view.findViewById(R.id.next_button);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final String category = mCategorySpinner.getSelectedItem().toString();
+                Intent i = NumberOfVideosWantedActivity.newIntent(getActivity(), mCountry,category);
+                startActivity(i);
+
             }
         });
 
@@ -73,7 +69,7 @@ public class CategoryWantedFragment extends Fragment {
         return view;
     }
 
-    private class GetCategoriesTask extends AsyncTask<Void, Void, Void> {
+    private class GetCategoriesTask extends AsyncTask<Void, Void, List<CharSequence>> {
         private String mCountry;
 
         public GetCategoriesTask(String country) {
@@ -81,15 +77,17 @@ public class CategoryWantedFragment extends Fragment {
         }
 
         @Override
-        protected Void doInBackground(Void... params) {
-            MiscUtils.addItemsToSpinner(mCategoryAdapter,YoutubeHelper.getPossibleCategories(mCountry));
-            return null;
+        protected List<CharSequence> doInBackground(Void... params) {
+            List<CharSequence> videoCategories = null;
+            videoCategories = YoutubeHelper.getPossibleCategories(mCountry);
+            return videoCategories;
         }
-        /*
+
         @Override
         protected void onPostExecute(List<CharSequence> categories) {
             mPossibleCategories = categories;
+            MiscUtils.addItemsToSpinner(mCategoryAdapter,mPossibleCategories);
         }
-        */
+
     }
 }

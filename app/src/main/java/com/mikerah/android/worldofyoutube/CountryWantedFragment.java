@@ -32,7 +32,7 @@ public class CountryWantedFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedIntanceState) {
         View view = inflater.inflate(R.layout.fragment_country_wanted,container,false);
 
-        Spinner countriesSpinner = (Spinner) view.findViewById(R.id.countries_spinner);
+        final Spinner countriesSpinner = (Spinner) view.findViewById(R.id.countries_spinner);
         String[] countries = getResources().getStringArray(R.array.countries_array);
         ArrayAdapter<CharSequence> countriesAdapter = new ArrayAdapter<CharSequence>(
                 getActivity().getBaseContext(),
@@ -40,12 +40,14 @@ public class CountryWantedFragment extends Fragment {
                 new ArrayList(Arrays.asList(countries)));
         MiscUtils.addItemsToSpinner(countriesAdapter, Constants.COUNTRIES);
         countriesSpinner.setAdapter(countriesAdapter);
-        final String country = countriesSpinner.getSelectedItem().toString();
+
+
 
         Button nextButton = (Button) view.findViewById(R.id.next_button);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                final String country = countriesSpinner.getSelectedItem().toString();
                 Intent i = CategoryWantedActivity.newIntent(getActivity(), country);
                 startActivity(i);
             }

@@ -32,7 +32,7 @@ public class NumberOfVideosWantedFragment extends Fragment {
         super.onCreate(savedInstanceBundle);
         setRetainInstance(true);
 
-        mCountry = (String) Constants.COUNTRIES.get(getArguments().getString(Constants.COUNTRY_CODE));
+        mCountry = getArguments().getString(Constants.COUNTRY_CODE);
         mCategory =(String) getArguments().getString(Constants.CATEGORY_CODE);
     }
 
@@ -40,13 +40,13 @@ public class NumberOfVideosWantedFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceBundle) {
         View view = inflater.inflate(R.layout.fragment_number_of_videos_wanted, container, false);
 
-        EditText numberOfVideosEditText = (EditText) view.findViewById(R.id.number_of_videos_edit_text);
-        final Long numberOfVideos = Long.valueOf(numberOfVideosEditText.getText().toString());
+        final EditText numberOfVideosEditText = (EditText) view.findViewById(R.id.number_of_videos_edit_text);
 
         Button nextButton = (Button) view.findViewById(R.id.next_button);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                final Long numberOfVideos = Long.valueOf(numberOfVideosEditText.getText().toString());
                 Intent intent = WorldOfYoutubeActivity.newIntent(getActivity(), numberOfVideos, mCountry, mCategory);
                 startActivity(intent);
             }

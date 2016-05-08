@@ -3,6 +3,7 @@ package com.mikerah.android.worldofyoutube;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 
 public class WorldOfYoutubeActivity extends SingleFragmentActivity {
 
@@ -16,7 +17,7 @@ public class WorldOfYoutubeActivity extends SingleFragmentActivity {
 
     @Override
     protected Fragment createFragment() {
-        Long numberOfVideos = Long.valueOf(getIntent().getStringExtra("Number of videos"));
+        Long numberOfVideos = getIntent().getLongExtra("Number of videos",5);
         String region = getIntent().getStringExtra("Region");
         String category = getIntent().getStringExtra("Category");
         return WorldOfYoutubeFragment.newInstance(numberOfVideos,region,category);

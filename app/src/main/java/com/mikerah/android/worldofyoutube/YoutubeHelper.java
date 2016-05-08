@@ -2,6 +2,7 @@ package com.mikerah.android.worldofyoutube;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.util.Log;
 
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
@@ -16,6 +17,7 @@ import com.google.api.services.youtube.model.VideoListResponse;
 import com.google.api.services.youtube.model.VideoSnippet;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -48,11 +50,13 @@ public class YoutubeHelper {
     }
 
     public static List<Video> getPopularVideosList(YouTube youTube, String regionCode,String category, Long numVideos) throws IOException {
-        Map<CharSequence,CharSequence> categories = MiscUtils.createCategoriesMap(youTube.videoCategories().list("snippet"));
+        Map<CharSequence,CharSequence> categories = MiscUtils.createCategoriesMap(youTube.videoCategories().list("snippet,id"),Constants.API_KEY,regionCode);
+
         YouTube.Videos.List videoList = youTube.videos().list("snippet,contentDetails");
         videoList.setChart("mostPopular");
         videoList.setMaxResults(numVideos);
         videoList.setRegionCode(regionCode);
+        Log.d("YoutubeHelper", "Category, CategoryId: "+ category + ", "+categories.get(category));
         videoList.setVideoCategoryId((String) categories.get(category));
         videoList.setKey(Constants.API_KEY);
 
@@ -66,10 +70,13 @@ public class YoutubeHelper {
         YouTube.VideoCategories.List list = null;
         try {
             list = createYoutubeObj().videoCategories().list("snippet");
+            list.setRegionCode(country);
+            list.setKey(Constants.API_KEY);
         } catch (IOException e) {
+            System.err.println("Couldn't create list");
             e.printStackTrace();
         }
-        list.setRegionCode((String) Constants.COUNTRIES.get(country));
+
         List<VideoCategory> videoCatList = null;
         try {
             videoCatList = list.execute().getItems();
@@ -78,10 +85,13 @@ public class YoutubeHelper {
             e.printStackTrace();
         }
 
-        List<CharSequence> videoCategories = null;
+        List<CharSequence> videoCategories = new ArrayList<>();
         for(VideoCategory vd: videoCatList) {
-            videoCategories.add(vd.getSnippet().getTitle());
+            if(vd.getSnippet().getAssignable() == true) {
+                videoCategories.add(vd.getSnippet().getTitle());
+            }
         }
+        videoCategories.add("All");
 
         return videoCategories;
     }

@@ -58,7 +58,7 @@ public class WorldOfYoutubeFragment extends Fragment {
         setRetainInstance(true);
         mYoutube = YoutubeHelper.createYoutubeObj();
 
-        mRegion = (String) Constants.COUNTRIES.get(getArguments().getString(Constants.COUNTRY_CODE));
+        mRegion = getArguments().getString(Constants.COUNTRY_CODE);
         mCategory = getArguments().getString(Constants.CATEGORY_CODE);
         mVideosToReturn = getArguments().getLong(Constants.NUMBER_OF_VIDEOS_CODE);
 
