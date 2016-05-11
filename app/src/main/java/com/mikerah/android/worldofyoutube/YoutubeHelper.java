@@ -114,27 +114,34 @@ public class YoutubeHelper {
 
     public static String getVideoDuration(Video video) {
         String duration_in_ISO = video.getContentDetails().getDuration().substring(2);
-        String pattern = "(\\d+)M(\\d+)S";
 
-        Pattern r = Pattern.compile(pattern);
-        Matcher m = r.matcher(duration_in_ISO);
-
+        String pattern1 = "(\\d+)M(\\d+)S";
+        String pattern2 = "(\\d+)M";
 
         String duration = null;
-        if (m.find()) {
+        if(duration_in_ISO.contains("M") && duration_in_ISO.contains("S")) {
+            Pattern r = Pattern.compile(pattern1);
+            Matcher m = r.matcher(duration_in_ISO);
+            m.find();
             if (m.group(2).length() > 1) {
                 duration = m.group(1) + ":" + m.group(2);
             } else {
                 duration = m.group(1) + ":0" + m.group(2);
             }
-        } else {
-
+        }
+        else if (duration_in_ISO.contains("M")) {
+            Pattern r = Pattern.compile(pattern2);
+            Matcher m = r.matcher(duration_in_ISO);
+            m.find();
+            duration = m.group(1) + ":00";
+        }
+        else {
             Pattern patternSec = Pattern.compile("(\\d+)S");
             Matcher matcherSec = patternSec.matcher(duration_in_ISO);
             matcherSec.find();
             duration = "0:"+matcherSec.group(1);
-
         }
+
         return duration;
 
     }
