@@ -8,7 +8,7 @@ import java.util.Map;
  */
 public class Constants {
 
-    public static final String API_KEY = "AIzaSyBf208Zc4Z_JAWw5oYxfefHR01_SxfR-lE";
+    public static final String API_KEY = "Your API Key";
     public static final String TAG = "WorldOfYoutubeFragment";
     public static final String NUMBER_OF_VIDEOS_CODE = "0";
     public static final String COUNTRY_CODE = "1";
