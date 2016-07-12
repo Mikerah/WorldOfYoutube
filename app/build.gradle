@@ -1,9 +1,16 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        config {
+            keyAlias 'WOYKey'
+            keyPassword 'WOYPassword'
+            storeFile file('C:/Users/Mikerah/Documents/Apps/Android/WOY-keystore.jks')
+            storePassword 'WOYPassword'
+        }
+    }
     compileSdkVersion 23
     buildToolsVersion "23.0.3"
-
     defaultConfig {
         applicationId "com.mikerah.android.worldofyoutube"
         minSdkVersion 16
@@ -15,6 +22,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
         }
     }
 }

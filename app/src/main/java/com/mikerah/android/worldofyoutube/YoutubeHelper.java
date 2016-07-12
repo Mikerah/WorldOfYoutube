@@ -2,7 +2,6 @@ package com.mikerah.android.worldofyoutube;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.util.Log;
 
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
@@ -56,7 +55,6 @@ public class YoutubeHelper {
         videoList.setChart("mostPopular");
         videoList.setMaxResults(numVideos);
         videoList.setRegionCode(regionCode);
-        Log.d("YoutubeHelper", "Category, CategoryId: "+ category + ", "+categories.get(category));
         videoList.setVideoCategoryId((String) categories.get(category));
         videoList.setKey(Constants.API_KEY);
 
