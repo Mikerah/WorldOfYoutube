@@ -9,5 +9,8 @@ I've learned a lot about threading and in particular AsyncTask. For me, this was
 ## Improvements
 There are a lot of major improvements that can be done to this app. A major thing that this app is missing is appropriate exception handling. At the moment, there are a few instances in which the app crashes when it shouldn't. Also, it doesn't check if the device is connected to the Internet and whether the device has the Youtube app installed. In addition to exception handling, testing needs to be done. Test suites needs to created in order to make sure that the basic components of the app actually work. Another major component of the app that needs to get fixed is the GUI. Currently, the GUI is very primitive and doesn't use Google's Material Design. It also doesn't take into account screen size and thus will look really different across devices. In addition to the GUI, the UX of the app needs to get fixed. Lastly, the app needs a decent app icon as opposed to the default one. 
 
+###### API KEY
+Since I have been having difficulty removing my API KEY from this repository's commit history, I have revoked the API KEY and left them in this code. Thus, if you fork this repo, you'll have to create your own Youtube Data v3 API KEY.
+
 ###### Disclaimer
 Some of the code in this project is not mine such as the code required to download the thumbnail for the videos and SingleFragmentActivity. 
